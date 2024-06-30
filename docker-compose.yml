@@ -9,6 +9,15 @@ services:
       - "8080:8080"
     volumes:
       - ./backend/src:/var/www
+  frontend:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    volumes:
+      - ./frontend/src:/app
+    command: 'yarn dev'
+    ports:
+      - 3000:3000
   mysql:
     image: mysql:8.0
     ports:
