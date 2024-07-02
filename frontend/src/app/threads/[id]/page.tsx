@@ -1,17 +1,28 @@
+'use client'
+
 import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import useSWR from 'swr'
 
+interface Response {
+  id: number;
+  response_no: number;
+  name: string;
+  created_at: string;
+  content: string;
+}
+
 const Thread = () => {
-  const router = useRouter()
-  const { id } = router.query
-  const fetcher = (url) => fetch(url).then((res) => res.json())
+  const searchParams = useSearchParams()
+  const id = searchParams.get('id')
+  const fetcher = (url: string) => fetch(url).then((res) => res.json())
   const { data, mutate } = useSWR(id ? `${process.env.NEXT_PUBLIC_API_URL}/threads/${id}` : null, fetcher)
   const thread = data?.data
   const [response, setResponse] = useState({ name: '', email: '', content: '' })
 
-  const createResponse = async (e) => {
+  const createResponse = async (e: any) => {
     e.preventDefault()
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/threads/${id}/responses`, {
@@ -29,7 +40,7 @@ const Thread = () => {
     }
   }
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setResponse({ ...response, [e.target.name]: e.target.value })
   }
 
@@ -51,7 +62,7 @@ const Thread = () => {
               <p className="px-8 whitespace-pre-wrap">{thread.content}</p>
             </div>
             {thread.responses &&
-              thread.responses.map((response) => (
+              thread.responses.map((response: Response) => (
                 <div className="mb-4" key={response.id}>
                   <p>
                     {response.response_no + 1}
@@ -107,7 +118,6 @@ const Thread = () => {
               className="p-0.5 w-[555px] text-sm border border-gray-500 rounded"
               value={response.content}
               onChange={handleChange}
-              rows="5"
             ></textarea>
           </div>
         </form>

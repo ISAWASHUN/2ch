@@ -16,9 +16,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <header>
-          <h1 className="pt-6 text-4xl font-bold text-center">掲示板</h1>
-      </header>
       <body className={inter.className}>{children}</body>
     </html>
   );
